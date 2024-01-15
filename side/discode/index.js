@@ -1,17 +1,18 @@
-const { Client, Events, GatewayIntentBits } = require("discord.js");
+const {
+  Client,
+  Events,
+  GatewayIntentBits,
+  EmbedBuilder,
+} = require("discord.js");
 const { Guilds, GuildMessages, MessageContent } = GatewayIntentBits;
 const client = new Client({ intents: [Guilds, GuildMessages, MessageContent] });
+
+const fortuneMessages = require("./fortuneMessages");
 
 const cron = require("node-cron");
 
 const dotenv = require("dotenv");
 dotenv.config();
-
-const fortuneMessages = [
-  "운이 좋을 거에요!",
-  "길거리에서 100원을 주웠을 때처럼 기뻐해봐요!",
-  "오늘 하루도 행복하세요!",
-];
 
 let lastFortuneIndex = -1;
 
@@ -21,12 +22,12 @@ client.once(Events.ClientReady, () => {
   console.log(`Ready! Logged in as ${client.user.tag}`);
 
   // 매일 정오에 실행되도록 스케줄링
-  cron.schedule("03 17 * * *", () => {
+  cron.schedule("03 14 * * *", () => {
     sendFortuneMessage();
   });
 });
 
-const targetChannelIds = ["1194815059591958591", "1194913991135346770"];
+const targetChannelIds = ["1194815059591958591"];
 
 function sendFortuneMessage() {
   const guilds = Array.from(client.guilds.cache.values());
@@ -49,7 +50,19 @@ function sendFortuneMessage() {
 function sendFortuneMessageToChannel(channel) {
   const randomIndex = getRandomIndex();
   const fortuneMessage = fortuneMessages[randomIndex];
-  channel.send(`🥠 ${fortuneMessage}`);
+
+  const embed = new EmbedBuilder()
+    .setColor("#ffb2a5")
+    .setTitle("⋆。˚ ♡ ₊˚ ෆᕱ⑅ᕱෆ ₊˚ ♡ ˚ 。⋆")
+    .setDescription(`${fortuneMessage}`)
+    .setTimestamp()
+    .setFooter({
+      text: "🍀 당신의 수호천사",
+      iconURL:
+        "https://cdn.discordapp.com/attachments/1194815059591958591/1196313785753948220/image.png?ex=65b72d08&is=65a4b808&hm=9526cc3c293977d3ae0c946605d611f4c3c7495a30e6de0df53b602e9f9c4353&",
+    });
+
+  channel.send({ embeds: [embed] });
 }
 
 function getRandomIndex() {
