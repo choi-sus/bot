@@ -45,9 +45,7 @@ function writeStateFile(state) {
 // 기존 상태 읽어오기
 let state = readStateFile();
 
-client.login(
-  "MTE5NDgxMTAxNDgxNDkxMjU4Mg.GolNrw.-UbqW-s3ICtKm6c6bIUzayJeetP5O7ekAz0mqs"
-);
+client.login(process.env.DISCORD_TOKEN);
 
 client.once(Events.ClientReady, () => {
   log.info(`Ready! Logged in as ${client.user.tag}`);
